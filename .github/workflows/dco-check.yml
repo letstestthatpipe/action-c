@@ -9,3 +9,15 @@ jobs:
       - name: Check for DCO
         id: dco-check
         uses: tisonkun/actions-dco@v1.1
+      - name: Comment about DCO status
+        uses: actions/github-script@v6
+        if: ${{ failure() }}
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `Thanks for your contribution! Please make sure to include a  \
+              a sign-off message in your commits. One or more of your commits is missing this message.`
+            })
